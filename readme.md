@@ -36,7 +36,7 @@ Copy worker to any network accessible computers. Start up the server first, then
 
 **Known Bugs**
 
-When a worker disconnects, the server doesn't recognize it. I will fix soon.
+When a worker disconnects, sometimes the server doesn't recognize it. I will fix soon.
 
 Code suggestions WELCOME!
 

@@ -36,7 +36,7 @@ func sendPacket(conn net.Conn, enc *gob.Encoder, packet *Packet, disconnect chan
 
 func receivePacket(conn net.Conn, dec *gob.Decoder, disconnect chan bool) (packet Packet, err error) {
 	conn.SetReadDeadline(time.Now().Add(time.Second * 2))
-	if err := dec.Decode(&packet); err != nil {
+	if err := dec.Decode(&packet); err == nil {
 		return packet, nil
 	} else {
 		handleError(err, disconnect)
