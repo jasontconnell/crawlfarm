@@ -120,3 +120,7 @@ func (server *Server) WorkerFinished(worker Worker){
         delete(server.Workers, worker.RemoteAddr)
     }
 }
+
+func (server Server) CheckFinished(worker Worker) bool {
+    return len(server.ProcessQueue) == 0 && len(worker.SentLinks) == 0
+}

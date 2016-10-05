@@ -99,7 +99,7 @@ func clientConnected(conn net.Conn, server data.Server) {
 				worker.FoundLinks <- found
 			}
 
-			if worker.QueueLength == 0 && found == 0 && len(server.UnprocessedLinks) == 0 {
+			if server.CheckFinished(worker) {
 				worker.Finished <- true
 			}
 		}
@@ -108,7 +108,6 @@ func clientConnected(conn net.Conn, server data.Server) {
 }
 
 func startListenLoop(listener net.Listener, server data.Server) {
-
 	for {
 		if conn, err := listener.Accept(); err == nil {
 			go clientConnected(conn, server)
