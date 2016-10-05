@@ -1,5 +1,7 @@
 **Usage**
 
+You can read up on the philosophy and need for this project [on my site, jasontconnell.com](http://www.jasontconnell.com/posts/crawlfarm)
+
 The project contains two executables.
 
 Update server/config.json to include your listen address and the root of the website that you would like to test. If your site is behind basic authentication you can add that to the headers object.
