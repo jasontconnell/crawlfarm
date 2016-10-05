@@ -5,8 +5,8 @@ import (
     "os"
     "encoding/json"
     "net"
-    "crawlfarm-worker/data"
-    crawl "crawlfarm-common"
+    "crawlfarm/worker/data"
+    crawl "crawlfarm/common"
     "time"
 )
 

@@ -2,7 +2,7 @@ package data
 
 import (
     "net"
-    crawl "crawlfarm-common"
+    crawl "crawlfarm/common"
 )
 
 type Worker struct {

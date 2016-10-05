@@ -1,7 +1,7 @@
 package data
 
 import (
-    crawl "crawlfarm-common"
+    crawl "crawlfarm/common"
     "net"
 )
 

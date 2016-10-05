@@ -4,9 +4,9 @@ import (
     "fmt"
     "net"
     "os"
-    "crawlfarm-server/data"
+    "crawlfarm/server/data"
     "encoding/json"
-    crawl "crawlfarm-common"
+    crawl "crawlfarm/common"
     "time"
 )
 
