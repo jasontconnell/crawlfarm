@@ -29,7 +29,7 @@ func main() {
 
 		if conn, err := net.Dial("tcp", conf.Server); err == nil {
 			client := data.NewClient(conn)
-			connected(conn, client, finished, disconnect)
+			go handleClient(conn, client, finished, disconnect)
 		} else {
 			go func() {
 				fmt.Println("No server listening at", conf.Server)
@@ -39,10 +39,6 @@ func main() {
 
 		<-finished
 	}
-}
-
-func connected(conn net.Conn, client data.Client, finished, disconnect chan bool) {
-	go handleClient(conn, client, finished, disconnect)
 }
 
 func handleClient(conn net.Conn, client data.Client, finished, disconnect chan bool) {
@@ -83,20 +79,20 @@ func handleClient(conn net.Conn, client data.Client, finished, disconnect chan b
 		case count := <-client.FoundLinks:
 			client.UniqueLinks += count
 		case result := <-client.Results:
-			urls := crawl.Parse(client.Site, result.Link.Url, result.Content)
-
-			for url := range urls {
-				client.ReportedLinks++
-				result.Links = append(result.Links, url)
-			}
-			result.Content = "" // clear content, the server doesn't care, save network bandwidth
-
-			result.QueueLength = len(client.InLinks)
-			client.ProcessedLinks++
-			client.OutResults <- result
-
 			if result.JobFinished {
 				client.Finished <- true
+			} else {
+				urls := crawl.Parse(client.Site, result.Link.Url, result.Content)
+
+				for url := range urls {
+					client.ReportedLinks++
+					result.Links = append(result.Links, url)
+				}
+
+				result.Content = "" // clear content, the server doesn't care, save network bandwidth
+				result.QueueLength = len(client.InLinks)
+				client.ProcessedLinks++
+				client.OutResults <- result
 			}
 		}
 	}

@@ -6,7 +6,6 @@ import (
     "sync"
     "fmt"
     "log"
-
 )
 
 type Server struct {
@@ -52,8 +51,11 @@ func NewServer(site crawl.Site) (server Server){
 }
 
 func (server Server) MarkComplete(worker *Worker, link crawl.Link){
+    server.ProcessLog.Println(result.Link.Url)
+
     server.Mutex.Lock()
     defer server.Mutex.Unlock()
+
 
     if _,ok := server.CrawledUrls[link.Url]; !ok {
         server.CrawledUrls[link.Url] = link.Url
@@ -81,11 +83,11 @@ func (server Server) AddUrl(link crawl.Link) bool {
 }
 
 func (server Server) RecordError(result crawl.Result){
+    server.ErrorLog.Println(fmt.Sprintf("%v, %v, %v", result.Link.Url, result.Link.Referrer, result.Code))
+
     server.Mutex.Lock()
     *server.ErrorCount++
     server.Mutex.Unlock()
-
-    server.ErrorLog.Println(fmt.Sprintf("%v, %v, %v", result.Link.Url, result.Link.Referrer, result.Code))
 }
 
 func (server *Server) Connected(worker Worker){

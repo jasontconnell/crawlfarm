@@ -41,11 +41,9 @@ func main() {
 
 		fmt.Println("Listen on", conf.Listen)
 
-		go func() {
-			if listener, err := net.Listen("tcp", conf.Listen); err == nil {
-				startListenLoop(listener, server)
-			}
-		}()
+		if listener, err := net.Listen("tcp", conf.Listen); err == nil {
+			go startListenLoop(listener, server)
+		}
 
 		<-server.Finished
 		t.Stop()
@@ -85,7 +83,6 @@ func clientConnected(conn net.Conn, server data.Server) {
 			worker.SentLinks[link.Url] = link
 			worker.OutLinks <- link
 		case result := <-server.Results:
-			server.ProcessLog.Println(result.Link.Url)
 			server.MarkComplete(&worker, result.Link)
 
 			worker.QueueLength = result.QueueLength
