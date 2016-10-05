@@ -7,5 +7,4 @@ type Config struct {
     Root string                 `json:"root"`
     VirtualPaths []string       `json:"virtualPaths"`
     Headers Headers             `json:"headers"`
-    ErrorFileName string            `json:"errorFile"`
 }

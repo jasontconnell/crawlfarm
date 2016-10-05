@@ -1,7 +1,6 @@
 {
     "listen": "127.0.0.1:12345",
-    "root": "http://local.ai.com",
+    "root": "http://www.example.com",
     "headers": {},
-    "virtualPaths": [],
-    "errorFile": "errors.txt"
+    "virtualPaths": []
 }
