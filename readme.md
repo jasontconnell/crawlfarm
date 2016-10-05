@@ -17,17 +17,19 @@ virtualPaths is used for additional links that may not be accessible via all oth
 
 **Server**
 
+~~~~
 cd crawlfarm/server
 go build
 server.exe   // or ./server
-
+~~~~
 
 **Worker**
 
+~~~~
 cd crawlfarm/worker
 go build
 worker.exe   // or ./worker
-
+~~~~
 
 Copy worker to any network accessible computers. Start up the server first, then add workers as you see fit. They can be added as long as there are URLs in the process queue on the server.
 
