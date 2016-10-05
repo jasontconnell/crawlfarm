@@ -51,7 +51,7 @@ func NewServer(site crawl.Site) (server Server){
 }
 
 func (server Server) MarkComplete(worker *Worker, link crawl.Link){
-    server.ProcessLog.Println(result.Link.Url)
+    server.ProcessLog.Println(link.Url)
 
     server.Mutex.Lock()
     defer server.Mutex.Unlock()
