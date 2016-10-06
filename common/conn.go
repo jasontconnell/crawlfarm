@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+
 type Gob struct {
 	Decoder *gob.Decoder
 	Encoder *gob.Encoder
@@ -28,14 +29,14 @@ func handleError(err interface{}, disconnect chan bool) {
 }
 
 func sendPacket(conn net.Conn, enc *gob.Encoder, packet *Packet, disconnect chan bool) {
-	conn.SetWriteDeadline(time.Now().Add(time.Second * 2))
+	conn.SetWriteDeadline(time.Now().Add(time.Second * 30))
 	if err := enc.Encode(packet); err != nil {
 		handleError(err, disconnect)
 	}
 }
 
 func receivePacket(conn net.Conn, dec *gob.Decoder, disconnect chan bool) (packet Packet, err error) {
-	conn.SetReadDeadline(time.Now().Add(time.Second * 2))
+	conn.SetReadDeadline(time.Now().Add(time.Second * 30))
 	if err := dec.Decode(&packet); err == nil {
 		return packet, nil
 	} else {
