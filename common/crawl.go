@@ -38,10 +38,6 @@ func Parse(site Site, referrer, content string) (urls chan Link) {
 }
 
 func Fetch(site Site, link Link) (reschan chan Result) {
-	if link.Url == "" {
-		return
-	}
-
 	var wg sync.WaitGroup
 	wg.Add(1)
 	reschan = make(chan Result)
