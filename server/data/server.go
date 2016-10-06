@@ -126,5 +126,10 @@ func (server *Server) WorkerFinished(worker Worker){
 }
 
 func (server Server) CheckFinished(worker Worker) bool {
+    server.MessageLog.Println(len(server.ProcessQueue), len(worker.SentLinks))
+    
+    server.Mutex.Lock()
+    defer server.Mutex.Unlock()
+
     return len(server.ProcessQueue) == 0 && len(worker.SentLinks) == 0
 }

@@ -35,7 +35,7 @@ func main() {
 	}
 }
 
-func startOutputLoop(client data.Client){
+func startOutputLoop(client *data.Client){
 	t := time.NewTicker(1 * time.Second)
 	go func() {
 		for tick := range t.C {
@@ -59,7 +59,7 @@ func handleClient(conn net.Conn, client data.Client) {
 	go crawl.ReadLoop(conn, client.Gob, client.InLinks, client.Results, client.FoundLinks, client.Disconnect)
 	go crawl.WriteResults(conn, client.Gob, client.OutResults, client.Disconnect)
 
-	go startOutputLoop(client)
+	go startOutputLoop(&client)
 
 	go func() {
 		<-client.Disconnect
