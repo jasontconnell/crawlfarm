@@ -11,11 +11,14 @@ Update server/config.json to include your listen address and the root of the web
     "listen": "127.0.0.1:12345",
     "root": "http://www.example.com",
     "headers": { "Authorization": "Basic xxxx" },
-    "virtualPaths": []
+    "virtualPaths": [],
+    "errorCodes": [404,500]
 }
 ~~~~
 
 virtualPaths is used for additional links that may not be accessible via all other links that are accessible via the root url. They are relative urls.
+
+For errorCodes, the default method before this update was to just say where it's not 200. Now you can specify error codes to report. There is no range function at this time.
 
 **Server**
 
