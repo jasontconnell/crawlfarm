@@ -35,7 +35,8 @@ func main() {
 		t := time.NewTicker(1 * time.Second)
 		go func() {
 			for tick := range t.C {
-				fmt.Printf("\r%v Workers: %d. Url queue: %d. Processed: %d. Errors: %d\t\t", tick.Format("15:04:05"), len(server.Workers), len(server.UnprocessedLinks), len(server.CrawledUrls), *server.ErrorCount)
+				fmt.Printf("\r%v Workers: %d. Url queue: %d. Results queue: %v. Processed: %d. Errors: %d\t\t", 
+					tick.Format("15:04:05"), len(server.Workers), len(server.UnprocessedLinks), len(server.Results), len(server.CrawledUrls), *server.ErrorCount)
 			}
 		}()
 
@@ -68,7 +69,6 @@ func clientConnected(conn net.Conn, server data.Server) {
 
 	go func() {
 		<-worker.Finished
-		server.MessageLog.Println("worker finished", worker.RemoteAddr)
 
 		server.WorkerFinished(worker)
 

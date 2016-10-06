@@ -8,7 +8,6 @@ import (
 type Worker struct {
     RemoteAddr string
     Conn net.Conn
-    Sites chan crawl.Site
     InLinks chan crawl.Link
     OutLinks chan crawl.Link
     Results chan crawl.Result
@@ -25,7 +24,6 @@ type Worker struct {
 func NewWorker(conn net.Conn) (worker Worker){
     worker.Conn = conn
     worker.RemoteAddr = conn.RemoteAddr().String()
-    worker.Sites = make(chan crawl.Site)
     worker.InLinks = make(chan crawl.Link, crawl.UrlMaxLength)
     worker.OutLinks = make(chan crawl.Link, crawl.UrlMaxLength)
     worker.Results = make(chan crawl.Result, crawl.UrlMaxLength)

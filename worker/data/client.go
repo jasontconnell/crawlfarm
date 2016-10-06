@@ -16,6 +16,7 @@ type Client struct {
     ProcessedLinks int
     UniqueLinks int
     Finished chan bool
+    Disconnect chan bool
     Gob crawl.Gob
 }
 
@@ -26,6 +27,7 @@ func NewClient(conn net.Conn) (client Client) {
     client.OutResults = make(chan crawl.Result, crawl.UrlMaxLength)
     client.FoundLinks = make(chan int, crawl.UrlMaxLength)
     client.Finished = make(chan bool)
+    client.Disconnect = make(chan bool)
 
     client.Gob = crawl.GetGob(client.Conn)
 

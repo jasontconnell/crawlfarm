@@ -22,51 +22,49 @@ func main() {
 		dec := json.NewDecoder(file)
 		dec.Decode(&conf)
 
-		finished := make(chan bool)
-		disconnect := make(chan bool)
-
 		fmt.Println("Dialing server on ", conf.Server)
 
 		if conn, err := net.Dial("tcp", conf.Server); err == nil {
 			client := data.NewClient(conn)
-			go handleClient(conn, client, finished, disconnect)
-		} else {
-			go func() {
-				fmt.Println("No server listening at", conf.Server)
-				finished <- true
-			}()
-		}
+			go handleClient(conn, client)
 
-		<-finished
+			<-client.Finished
+		} else {
+			fmt.Println("No server listening at", conf.Server)
+		}
 	}
 }
 
-func handleClient(conn net.Conn, client data.Client, finished, disconnect chan bool) {
-	client.Site = crawl.ReadSite(conn, client.Gob, disconnect)
-	fmt.Println("Job: ", client.Site.Root)
-
-	go crawl.ReadLoop(conn, client.Gob, client.InLinks, client.Results, client.FoundLinks, disconnect)
-	go crawl.WriteResults(conn, client.Gob, client.OutResults, disconnect)
-
+func startOutputLoop(client data.Client){
+	t := time.NewTicker(1 * time.Second)
 	go func() {
-		t := time.NewTicker(1 * time.Second)
-		go func() {
-			for tick := range t.C {
-				fmt.Printf("\r%v Processed: %d. Found: %d. Unique: %d. Queue: %d\t\t", tick.Format("15:04:05"), client.ProcessedLinks, client.ReportedLinks, client.UniqueLinks, len(client.InLinks))
-			}
-		}()
-
-		<-client.Finished
-		t.Stop()
-
-		fmt.Println("Job finished")
-		finished <- true
+		for tick := range t.C {
+			fmt.Printf("\r%v Processed: %d. Found: %d. Unique: %d. Queue: %d\t\t", 
+				tick.Format("15:04:05"), client.ProcessedLinks, client.ReportedLinks, client.UniqueLinks, len(client.InLinks))
+		}
 	}()
 
+	<-client.Finished
+	t.Stop()
+
+	fmt.Println("Job finished")
+
+	client.Finished <- true // send finished to the listener in main()
+}
+
+func handleClient(conn net.Conn, client data.Client) {
+	client.Site = crawl.ReadSite(conn, client.Gob, client.Disconnect)
+	fmt.Println("Job: ", client.Site.Root)
+
+	go crawl.ReadLoop(conn, client.Gob, client.InLinks, client.Results, client.FoundLinks, client.Disconnect)
+	go crawl.WriteResults(conn, client.Gob, client.OutResults, client.Disconnect)
+
+	go startOutputLoop(client)
+
 	go func() {
-		<-disconnect
+		<-client.Disconnect
 		fmt.Println("\n\nServer closed. Closing")
-		finished <- true
+		client.Finished <- true
 	}()
 
 	for {

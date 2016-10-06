@@ -25,7 +25,7 @@ type Server struct {
 
 func NewServer(site crawl.Site) (server Server){
     server.Site = site
-    server.UnprocessedLinks = make(chan crawl.Link, crawl.UrlMaxLength)
+    server.UnprocessedLinks = make(chan crawl.Link, 13000)
     server.Workers = make(map[string]bool)
     server.Results = make(chan crawl.Result, crawl.UrlMaxLength)
     server.CrawledUrls = make(map[string]string)
@@ -111,6 +111,8 @@ func (server *Server) Disconnected(worker Worker){
 }
 
 func (server *Server) WorkerFinished(worker Worker){
+    server.MessageLog.Println("worker finished", worker.RemoteAddr)
+
     server.Mutex.Lock()
     defer server.Mutex.Unlock()
 
