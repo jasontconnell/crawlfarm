@@ -28,7 +28,7 @@ func main() {
 
 		fmt.Println("Job:", site.Root)
 
-		server := data.NewServer(site)
+		server := data.NewServer(site, conf.ErrorCodes)
 
 		server.UnprocessedLinks <- crawl.Link{Url: conf.Root, Referrer: "/"}
 
@@ -88,7 +88,12 @@ func clientConnected(conn net.Conn, server data.Server) {
 			worker.QueueLength = result.QueueLength
 			found := 0
 
-			if result.Code != 200 {
+			isError := false
+			for _, errcode := range server.ErrorCodes {
+				isError = isError || errcode == result.Code
+			}
+
+			if isError {
 				server.RecordError(result)
 			} else {
 				for _, url := range result.Links {

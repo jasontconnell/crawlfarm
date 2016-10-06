@@ -16,6 +16,7 @@ type Server struct {
     CrawledUrls map[string]string
     ProcessQueue map[string]string
     Finished chan bool
+    ErrorCodes []int
     Mutex *sync.Mutex
     ErrorLog *log.Logger
     ProcessLog *log.Logger
@@ -23,7 +24,7 @@ type Server struct {
     ErrorCount *int
 }
 
-func NewServer(site crawl.Site) (server Server){
+func NewServer(site crawl.Site, errcodes []int) (server Server){
     server.Site = site
     server.UnprocessedLinks = make(chan crawl.Link, 13000)
     server.Workers = make(map[string]bool)
@@ -34,6 +35,7 @@ func NewServer(site crawl.Site) (server Server){
     server.Mutex = new(sync.Mutex)
     server.ErrorCount = new(int)
     *server.ErrorCount = 0
+    server.ErrorCodes = errcodes
 
     if file, err := os.Create("processed.log"); err == nil {
         server.ProcessLog = log.New(file, "", 0)

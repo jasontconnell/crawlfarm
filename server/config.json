@@ -1,6 +1,7 @@
 {
     "listen": "127.0.0.1:12345",
-    "root": "http://www.example.com",
+    "root": "http://www.golang.org",
     "headers": {},
-    "virtualPaths": []
+    "virtualPaths": [],
+    "errorCodes": [404,500]
 }
