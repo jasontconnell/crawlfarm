@@ -1,10 +1,10 @@
 package main
 
 import (
-	crawl "crawlfarm/common"
-	"crawlfarm/worker/data"
 	"encoding/json"
 	"fmt"
+	crawl "github.com/jasontconnell/crawlfarm/common"
+	"github.com/jasontconnell/crawlfarm/worker/data"
 	"net"
 	"os"
 	"time"
@@ -35,11 +35,11 @@ func main() {
 	}
 }
 
-func startOutputLoop(client *data.Client){
+func startOutputLoop(client *data.Client) {
 	t := time.NewTicker(1 * time.Second)
 	go func() {
 		for tick := range t.C {
-			fmt.Printf("\r%v Processed: %d. Found: %d. Unique: %d. Queue: %d\t\t", 
+			fmt.Printf("\r%v Processed: %d. Found: %d. Unique: %d. Queue: %d\t\t",
 				tick.Format("15:04:05"), client.ProcessedLinks, client.ReportedLinks, client.UniqueLinks, len(client.InLinks))
 		}
 	}()

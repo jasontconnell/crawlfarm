@@ -1,10 +1,10 @@
 package main
 
 import (
-	crawl "crawlfarm/common"
-	"crawlfarm/server/data"
 	"encoding/json"
 	"fmt"
+	crawl "github.com/jasontconnell/crawlfarm/common"
+	"github.com/jasontconnell/crawlfarm/server/data"
 	"net"
 	"os"
 	"time"
@@ -35,7 +35,7 @@ func main() {
 		t := time.NewTicker(1 * time.Second)
 		go func() {
 			for tick := range t.C {
-				fmt.Printf("\r%v Workers: %d. Url queue: %d. Results queue: %v. Processed: %d. Errors: %d\t\t", 
+				fmt.Printf("\r%v Workers: %d. Url queue: %d. Results queue: %v. Processed: %d. Errors: %d\t\t",
 					tick.Format("15:04:05"), len(server.Workers), len(server.UnprocessedLinks), len(server.Results), len(server.CrawledUrls), *server.ErrorCount)
 			}
 		}()
