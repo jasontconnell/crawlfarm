@@ -1,0 +1,6 @@
+FROM go:1.15.1
+
+WORKDIR /work
+
+COPY . .
+

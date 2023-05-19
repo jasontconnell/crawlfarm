@@ -1,0 +1,8 @@
+FROM go:1.15.1
+
+WORKDIR /work
+
+COPY common/ common/
+COPY worker/ worker/
+
+RUN go build worker/ -o /etc/bin/crawlfarm-worker
