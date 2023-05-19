@@ -1,3 +1,3 @@
 module github.com/jasontconnell/crawlfarm/worker
 
-go 1.15
+go 1.20
